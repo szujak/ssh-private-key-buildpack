@@ -9,13 +9,13 @@ function indent() {
 }
 
 env_dir=$3
-ssh_key="$(cat $env_dir/SSH_KEY)"
+key_file="$env_dir/SSH_KEY"
 
-if [ "$ssh_key" != "" ]; then
+if [ -f "$key_file" ]; then
 	echo "-----> Running SSH private key setup"
 
 	mkdir "$HOME/.ssh"
-	echo "$ssh_key" | base64 --decode > "$HOME/.ssh/id_rsa"
+	cp "$key_file" "$HOME/.ssh/id_rsa"
 	ssh -oStrictHostKeyChecking=no -T git@github.com 2>&1 | indent
 	exit 0
 else
