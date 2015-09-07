@@ -10,11 +10,13 @@ Upload the private key to heroku (note that the key needs to be base64 encoded).
 heroku config:set SSH_KEY="$(cat ~/.ssh/id_rsa)"
 ```
 
-Add a `.buildpacks` file (used by `heroku-buildpack-multi`) which contains this and the default node.js buildpack.
+Use the Heroku Toolbelt to
+[add this buildpack](https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app#adding-a-buildpack).
+Use `--index` to make sure the buildpack runs before any others which might need
+the SSH key setup:
 
 ```
-https://github.com/debitoor/ssh-private-key-buildpack.git#v1.0.0
-https://github.com/heroku/heroku-buildpack-nodejs.git#v75
+heroku buildpacks:add --index 1 https://github.com/bjeanes/ssh-private-key-buildpack.git
 ```
 
 Now as long as the public key is present on github and the user has the correct permissions, it's possible to install `npm` modules from private `githup` repositories.
